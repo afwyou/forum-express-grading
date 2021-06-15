@@ -1,6 +1,10 @@
 const express = require('express')
+const handlebars = require('express-handlebars')
 const app = express()
 const port = 3000
+
+app.engine('handlebars', handlebars()) // Handlebars 註冊樣板引擎
+app.set('view engine', 'handlebars') // 設定使用 Handlebars 做為樣板引擎
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
@@ -8,4 +12,6 @@ app.listen(port, () => {
 
 require('./routes')(app)
 
+
+//導入自動化測試，所以需要將app輸出
 module.exports = app
