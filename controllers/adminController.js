@@ -66,6 +66,17 @@ const adminController = {
       })
   },
 
+  //刪除
+  deleteRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id)
+      .then((restaurant) => {
+        restaurant.destroy()
+          .then((restaurant) => {
+            res.redirect('/admin/restaurants')
+          })
+      })
+  }
+
 }
 
 module.exports = adminController
