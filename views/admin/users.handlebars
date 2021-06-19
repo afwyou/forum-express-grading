@@ -22,7 +22,7 @@
       <td>{{this.email}}</td>
       <td>{{#if isAdmin}}Admin{{else}}User{{/if}}</td>
       <td>
-        <form action="/admin/users/{{this.id}}/toggleAdmin" method="PUT" style="display: inline;">
+        <form action="/admin/users/{{this.id}}/toggleAdmin?_method=PUT" method="POST" style="display: inline;">
           <button type="submit" class="btn btn-link">
             {{#if isAdmin}}Set as User{{else}}Set as Admin{{/if}}
           </button>

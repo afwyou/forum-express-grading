@@ -124,7 +124,20 @@ const adminController = {
     return User.findAll({ raw: true }).then(users => {
       return res.render('admin/users', { users: users })
     })
-  }
+  },
+  //切換使用者權限
+  toggleAdmin: (req, res) => {
+    return User.findByPk(req.params.id, { raw: true })
+      .then(user => {
+        user.isAdmin = user.isAdmin ? false : true
+        //有沒有其他方法可以改變？
+        req.flash('success_messages', 'user was successfully to update')
+        return user.save()
+      })
+      .then(() => {
+        return res.redirect('/admin/users')
+      })
+  },
 
 }
 
