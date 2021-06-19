@@ -6,11 +6,13 @@ const User = db.User
 const fs = require('fs')
 
 const adminController = {
+  //瀏覽餐廳
   getRestaurants: (req, res) => {
     return Restaurant.findAll({ raw: true }).then(restaurants => {
       return res.render('admin/restaurants', { restaurants: restaurants })
     })
   },
+  //瀏覽餐廳（一間）
   getRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, { raw: true }).then(restaurant => {
       return res.render('admin/restaurant', {
@@ -18,17 +20,17 @@ const adminController = {
       })
     })
   },
-
+  //新增餐廳（進入新增頁面）
   createRestaurant: (req, res) => {
     return res.render('admin/create')
   },
-  //進入編輯頁面
+  //編輯餐廳（進入頁面）
   editRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, { raw: true }).then(restaurant => {
       return res.render('admin/create', { restaurant: restaurant })
     })
   },
-  //執行資料編輯
+  //編輯餐廳（提交）
   putRestaurant: (req, res) => {
     if (!req.body.name) {
       req.flash('error_messages', "name didn't exist")
@@ -71,7 +73,7 @@ const adminController = {
         })
     }
   },
-
+  //新增餐廳（提交）
   postRestaurant: (req, res) => {
     if (!req.body.name) {
       req.flash('error_messages', "name didn't exist")
@@ -107,7 +109,6 @@ const adminController = {
       })
     }
   },
-
   //刪除
   deleteRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id)
@@ -117,6 +118,12 @@ const adminController = {
             res.redirect('/admin/restaurants')
           })
       })
+  },
+  //顯示使用者清單
+  getUsers: (req, res) => {
+    return User.findAll({ raw: true }).then(users => {
+      return res.render('admin/users', { users: users })
+    })
   }
 
 }
