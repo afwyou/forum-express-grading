@@ -127,7 +127,7 @@ const adminController = {
   },
   //切換使用者權限
   toggleAdmin: (req, res) => {
-    return User.findByPk(req.params.id, { raw: true })
+    return User.findByPk(req.params.id)
       .then(user => {
         user.isAdmin = user.isAdmin ? false : true
         //有沒有其他方法可以改變？
