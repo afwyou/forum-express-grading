@@ -2,21 +2,32 @@ const db = require('../models')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const Restaurant = db.Restaurant
+const Category = db.Category
 const User = db.User
 const fs = require('fs')
 
 const adminController = {
   //瀏覽餐廳
   getRestaurants: (req, res) => {
-    return Restaurant.findAll({ raw: true }).then(restaurants => {
+    return Restaurant.findAll({
+      raw: true,
+      nest: true,//轉換成 JS 原生物件
+      include: [Category]
+      //預設情形下，Sequelize 只會返回屬於餐廳本身的資料，不包關聯的資料，設定 include 後，restaurants 會多一包物件，意味著你能夠用 this.Category 再取出這包物件。
+      //文件上方用 db.Category 拿到了 Category model，所以直接把 Category 拿進來
+    }).then(restaurants => {
+      // console.log(restaurants)
       return res.render('admin/restaurants', { restaurants: restaurants })
     })
   },
   //瀏覽餐廳（一間）
   getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { raw: true }).then(restaurant => {
+    return Restaurant.findByPk(req.params.id, {
+      include: [Category]
+    }).then(restaurant => {
+      console.log(restaurant)
       return res.render('admin/restaurant', {
-        restaurant: restaurant
+        restaurant: restaurant.toJSON()
       })
     })
   },
