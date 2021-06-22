@@ -5,6 +5,8 @@ const Category = db.Category
 
 
 const restController = {
+
+  //瀏覽全部餐廳
   getRestaurants: (req, res) => {
     Restaurant.findAll({ include: Category }).then(restaurants => {
       const data = restaurants.map(r => ({
@@ -14,6 +16,16 @@ const restController = {
       }))
       return res.render('restaurants', {
         restaurants: data
+      })
+    })
+  },
+  //瀏覽餐廳
+  getRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id, {
+      include: Category
+    }).then(restaurant => {
+      return res.render('restaurant', {
+        restaurant: restaurant.toJSON()
       })
     })
   }

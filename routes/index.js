@@ -22,9 +22,10 @@ module.exports = (app, passport) => {
     res.redirect('/signin')
   }
 
-
+  //前台
   app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
   app.get('/restaurants', authenticated, restController.getRestaurants)
+  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
 
 
   //users
