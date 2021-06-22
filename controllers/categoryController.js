@@ -9,8 +9,34 @@ let categoryController = {
       raw: true,
       nest: true
     }).then(categories => {
-      return res.render('admin/categories', { categories: categories })
+      //如果從edit發送請求，就會帶有id
+      if (req.params.id) {
+        Category.findByPk(req.params.id)
+          .then((category) => {
+            return res.render('admin/categories', {
+              categories: categories,//渲染所有category
+              category: category.toJSON()//渲染輸入匡的category
+            })
+          })
+      } else {
+        return res.render('admin/categories', { categories: categories })
+      }
     })
+  },
+  //修改分類
+  putCategory: (req, res) => {
+    if (!req.body.name) {
+      req.flash('error_messages', 'name didn\'t exist')
+      return res.redirect('back')
+    } else {
+      return Category.findByPk(req.params.id)
+        .then((category) => {
+          category.update(req.body)
+            .then((category) => {
+              res.redirect('/admin/categories')
+            })
+        })
+    }
   },
 
   //新增分類
