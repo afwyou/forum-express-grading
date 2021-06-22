@@ -54,5 +54,16 @@ let categoryController = {
         })
     }
   },
+
+  //刪除分類
+  deleteCategory: (req, res) => {
+    return Category.findByPk(req.params.id)
+      .then((category) => {
+        category.destroy()
+          .then((category) => {
+            res.redirect('/admin/categories')
+          })
+      })
+  }
 }
 module.exports = categoryController
