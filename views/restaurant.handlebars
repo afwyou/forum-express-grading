@@ -23,8 +23,10 @@
 <form action="/comments" method="POST">
   <div class="form-group">
     <label for="text">留下評論：</label>
+    {{!-- req.body.text --}}
     <textarea class="form-control" id="text" name="text" rows="3"></textarea>
   </div>
+  {{!-- req.body.restaurantId --}}
   <input type="hidden" name="restaurantId" value="{{restaurant.id}}" />
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
