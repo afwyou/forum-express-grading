@@ -2,6 +2,8 @@ const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
 const pageLimit = 10
+const Comment = db.Comment
+const User = db.User
 
 
 
@@ -60,8 +62,19 @@ const restController = {
   //瀏覽餐廳
   getRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, {
-      include: Category
+      include: [
+        Category,
+        { model: Comment, include: [User] }
+      ]
     }).then(restaurant => {
+      // console.log('=====restaurant.Comments[0].dataValues=====')
+      // console.log(restaurant.Comments[0].dataValues)
+      // console.log('=====restaurant.Comments[0]=====')
+      // console.log(restaurant.Comments[0])
+      // console.log('=====restaurant.Comments=====')
+      // console.log(restaurant.Comments)
+      // console.log('=====restaurant=====')
+      // console.log(restaurant)
       return res.render('restaurant', {
         restaurant: restaurant.toJSON()
       })
