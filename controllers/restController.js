@@ -1,6 +1,7 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
+const pageLimit = 10
 
 
 
@@ -8,22 +9,37 @@ const restController = {
 
   //瀏覽全部餐廳
   getRestaurants: (req, res) => {
-    const whereQuery = {}//要傳給 findAll 的參數，需要包裝成物件格式。
+    let offset = 0
+    const whereQuery = {}
     let categoryId = ''
-    if (req.query.categoryId) {//如果有的話
-      categoryId = Number(req.query.categoryId)//傳給 Sequelize 時需要轉成數字格式
+    if (req.query.page) {
+      offset = (req.query.page - 1) * pageLimit//Restaurant.findAndCountAll
+    }
+    if (req.query.categoryId) {
+      categoryId = Number(req.query.categoryId)
       whereQuery.CategoryId = categoryId
     }
 
-    Restaurant.findAll({ include: Category, where: whereQuery }).then(restaurants => {
-      const data = restaurants.map(r => ({
+    Restaurant.findAndCountAll({
+      include: Category,
+      where: whereQuery,
+      offset: offset,
+      limit: pageLimit
+    }).then(result => {
+      // data for pagination
+      const page = Number(req.query.page) || 1//for prev next
+      const pages = Math.ceil(result.count / pageLimit)//for totalPage
+      const totalPage = Array.from({ length: pages }).map((item, index) => index + 1)
+      const prev = page - 1 < 1 ? 1 : page - 1
+      const next = page + 1 > pages ? pages : page + 1
+
+      // clean up restaurant data
+      const data = result.rows.map(r => ({
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
-        categoryName: r.Category.name
+        categoryName: r.dataValues.Category.name
       }))
-      //上面透過關聯取得的category物件資料會夾帶在restaurant的物件裡面
-      //但是上面已經取得的catagory物件並無法用restaurants.Category的方式列印出來？？？？
-      //下面的category資料則是另外再呼叫的
+
       Category.findAll({
         raw: true,
         nest: true
@@ -31,7 +47,11 @@ const restController = {
         return res.render('restaurants', {
           restaurants: data,
           categories: categories,
-          categoryId: categoryId
+          categoryId: categoryId,
+          page: page,
+          totalPage: totalPage,
+          prev: prev,
+          next: next
         })
       })
     })
