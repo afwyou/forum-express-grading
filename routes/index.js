@@ -30,6 +30,7 @@ module.exports = (app, passport) => {
 
   //評論
   app.post('/comments', authenticated, commentController.postComment)
+  app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
 
   //users
