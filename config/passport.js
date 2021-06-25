@@ -32,7 +32,9 @@ passport.serializeUser((user, cb) => {
 passport.deserializeUser((id, cb) => {
   User.findByPk(id, {
     include: [
-      { model: Restaurant, as: 'FavoritedRestaurants' }
+      { model: Restaurant, as: 'FavoritedRestaurants' },
+      { model: User, as: 'Followers' },
+      { model: User, as: 'Followings' }
       // as 標明想要引入的關係，對應在 model 設定的別名。
     ]
   }).then(user => {
