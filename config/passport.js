@@ -3,6 +3,7 @@ const LocalStrategy = require('passport-local')
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Restaurant = db.Restaurant
 
 // setup passport strategy
 passport.use(new LocalStrategy(
@@ -29,8 +30,15 @@ passport.serializeUser((user, cb) => {
 })
 //「反序列化」就是透過 user id，把整個 user 物件實例拿出來
 passport.deserializeUser((id, cb) => {
-  User.findByPk(id).then(user => {
-    user = user.toJSON() // 此處與影片示範不同
+  User.findByPk(id, {
+    include: [
+      { model: Restaurant, as: 'FavoritedRestaurants' },
+      { model: User, as: 'Followers' },
+      { model: User, as: 'Followings' }
+      // as 標明想要引入的關係，對應在 model 設定的別名。
+    ]
+  }).then(user => {
+    user = user.toJSON()
     return cb(null, user)
   })
 })

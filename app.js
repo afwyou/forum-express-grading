@@ -12,7 +12,10 @@ const db = require('./models') // 引入資料庫
 const app = express()
 const port = process.env.PORT || 3000
 
-app.engine('handlebars', handlebars({ defaultLayout: 'main' }))
+app.engine('handlebars', handlebars({
+  defaultLayout: 'main',
+  helpers: require('./config/handlebars-helpers')
+}))
 app.set('view engine', 'handlebars')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))//_method 是我們指定的參數名稱，想要改的話可以在這裡改
