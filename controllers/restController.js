@@ -35,17 +35,27 @@ const restController = {
       const prev = page - 1 < 1 ? 1 : page - 1
       const next = page + 1 > pages ? pages : page + 1
 
+      // console.log(`列印出result：${result.rows}`)
+      // console.log(`列印出data2==========${data2}`)
+      //不知道該如何列印出result詳細物件內容
+
       // clean up restaurant data
       const data = result.rows.map(r => ({
+        //result.count - 資料量
+        //result.rows - 獲得餐廳資料陣列（有很多餐廳物件）
+        //參考U140
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
-        categoryName: r.dataValues.Category.name
+        categoryName: r.dataValues.Category.name,
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+        //req.user.FavoritedRestaurants 取出使用者的收藏清單，然後 map 成 id 清單，之後用 Array 的 includes 方法進行比對，最後會回傳布林值。
       }))
 
       Category.findAll({
         raw: true,
         nest: true
       }).then(categories => {
+        console.log(`列印出data==========${data}`)
         return res.render('restaurants', {
           restaurants: data,
           categories: categories,
@@ -64,6 +74,7 @@ const restController = {
     return Restaurant.findByPk(req.params.id, {
       include: [
         Category,
+        { model: User, as: 'FavoritedUsers' },//調出有收藏此餐廳的關聯user
         { model: Comment, include: [User] }
       ]
     }).then(restaurant => {
@@ -75,8 +86,11 @@ const restController = {
       // console.log(restaurant.Comments)
       // console.log('=====restaurant=====')
       // console.log(restaurant)
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+      //把有收藏此餐廳的user經過map變成id清單後，比對是否符合使用者的id，如果有，表示是已經收藏的餐廳
       return res.render('restaurant', {
-        restaurant: restaurant.toJSON()
+        restaurant: restaurant.toJSON(),
+        isFavorited: isFavorited
       })
     })
   },
