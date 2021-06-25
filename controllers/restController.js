@@ -94,9 +94,11 @@ const restController = {
         raw: true,
         nest: true,
         order: [['createdAt', 'DESC']],
-        include: [User, Restaurant]
+        include: [User, Restaurant]//這樣就拿到了一包User跟一包Restaurant物件，而之前是透過restaurant.findall去抓取comment再透過comment抓取User，因此include裡面的語法就不一樣
+        //{ model: Comment, include: [User] }
       })
     ]).then(([restaurants, comments]) => {
+      console.log(comments)
       return res.render('feeds', {
         restaurants: restaurants,
         comments: comments
