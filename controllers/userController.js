@@ -167,7 +167,7 @@ const userController = {
           user.update({
             name: req.body.name,
             email: req.body.email,
-            image: email.image
+            image: user.image
           })
             .then((user) => {
               req.flash('success_messages', 'user was successfully to update')
