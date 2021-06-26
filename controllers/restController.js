@@ -55,7 +55,6 @@ const restController = {
         raw: true,
         nest: true
       }).then(categories => {
-        console.log(`列印出data==========${data}`)
         return res.render('restaurants', {
           restaurants: data,
           categories: categories,
