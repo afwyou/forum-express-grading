@@ -1,6 +1,7 @@
 const db = require('../models')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+//這個環境變數要記得也要存入heroku
 const Restaurant = db.Restaurant
 const Category = db.Category
 const User = db.User
