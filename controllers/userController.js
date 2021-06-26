@@ -115,10 +115,20 @@ const userController = {
           })
       })
   },
+  //使用者資料
   getUser: (req, res) => {
     return User.findByPk(req.params.id)
       .then(user => {
         return res.render('profile', {
+          user: user.toJSON()
+        })
+      })
+  },
+  //使用者編輯
+  editUser: (req, res) => {
+    return User.findByPk(req.params.id)
+      .then(user => {
+        return res.render('editProfile', {
           user: user.toJSON()
         })
       })
