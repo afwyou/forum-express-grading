@@ -114,7 +114,15 @@ const userController = {
             return res.redirect('back')
           })
       })
-  }
+  },
+  getUser: (req, res) => {
+    return User.findByPk(req.params.id)
+      .then(user => {
+        return res.render('profile', {
+          user: user.toJSON()
+        })
+      })
+  },
 }
 
 module.exports = userController
