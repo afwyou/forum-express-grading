@@ -5,6 +5,7 @@ const Favorite = db.Favorite
 const Followship = db.Followship
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+const fs = require('fs')
 
 const userController = {
   signUpPage: (req, res) => {
