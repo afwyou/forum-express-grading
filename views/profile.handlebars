@@ -16,5 +16,22 @@
   </div>
   <hr>
 </div>
+{{!-- 使用者評論紀錄 --}}
+<div class="row" style="background-color: rgba(192, 188, 188, 0.904)">
+  <div class="col-12 mb-2 "
+    style="border-bottom: 1px solid rgb(157, 216, 231); background-color: rgba(111, 207, 245, 0.5); height:50px;display:flex; align-items:center; justify-content: center">
+    <strong>已評論餐廳</strong>
+  </div>
+  <div class="col-12" style=" display: flex ;flex-wrap: wrap; justify-content: center">
+    {{#each user.Comments}}
+    <div class="comment-container m-4" style=" display: flex ;flex-direction:column; align-items: center">
+      <a href="/restaurants/{{this.Restaurant.id}}">
+        <img style="width:150px" src="{{this.Restaurant.image}}">
+      </a>
+      <div>{{this.Restaurant.name}}</div>
+    </div>
+    {{/each}}
+  </div>
+</div>
 <hr>
 <br />
