@@ -77,20 +77,13 @@ const restController = {
         { model: Comment, include: [User] }
       ]
     }).then(restaurant => {
-      // console.log('=====restaurant.Comments[0].dataValues=====')
-      // console.log(restaurant.Comments[0].dataValues)
-      // console.log('=====restaurant.Comments[0]=====')
-      // console.log(restaurant.Comments[0])
-      // console.log('=====restaurant.Comments=====')
-      // console.log(restaurant.Comments)
-      // console.log('=====restaurant=====')
-      // console.log(restaurant)
       const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
       //把有收藏此餐廳的user經過map變成id清單後，比對是否符合使用者的id，如果有，表示是已經收藏的餐廳
-      return res.render('restaurant', {
+      res.render('restaurant', {
         restaurant: restaurant.toJSON(),
         isFavorited: isFavorited
       })
+      return restaurant.increment('viewCounts', { by: 1 })
     })
   },
   getFeeds: (req, res) => {
@@ -111,7 +104,7 @@ const restController = {
         //{ model: Comment, include: [User] }
       })
     ]).then(([restaurants, comments]) => {
-      console.log(comments)
+      // console.log(comments)
       return res.render('feeds', {
         restaurants: restaurants,
         comments: comments
