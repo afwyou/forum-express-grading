@@ -5,6 +5,7 @@ const Favorite = db.Favorite
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Followship = db.Followship
+const Like = db.Like
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const fs = require('fs')
@@ -53,6 +54,7 @@ const userController = {
     req.logout()
     res.redirect('/signin')
   },
+  //加我的最愛
   addFavorite: (req, res) => {
     return Favorite.create({
       UserId: req.user.id,
@@ -62,6 +64,7 @@ const userController = {
         return res.redirect('back')
       })
   },
+  //移除我的最愛
   removeFavorite: (req, res) => {
     return Favorite.findOne({
       where: {
@@ -71,6 +74,31 @@ const userController = {
     })
       .then((favorite) => {
         favorite.destroy()
+          .then((restaurant) => {
+            return res.redirect('back')
+          })
+      })
+  },
+  //按讚
+  addLike: (req, res) => {
+    return Like.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    })
+      .then((restaurant) => {
+        return res.redirect('back')
+      })
+  },
+  //取消按讚
+  removeLike: (req, res) => {
+    return Like.findOne({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
+    })
+      .then((like) => {
+        like.destroy()
           .then((restaurant) => {
             return res.redirect('back')
           })

@@ -3,7 +3,7 @@ const faker = require('faker')
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('Comments',
-      Array.from({ length: 20 }).map((d, i) =>
+      Array.from({ length: 4 }).map((d, i) =>
       ({
         text: faker.lorem.sentence(),
         UserId: Math.floor(Math.random() * 3) * 10 + 5,
