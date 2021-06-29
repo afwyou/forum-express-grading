@@ -7,10 +7,10 @@
       </div>
       <div class="col-md-12">
         <p>{{user.email}}</p>
-        <p>{{user.Comments.length}}家已評論餐廳</p>
-        <p>{{user.FavoritedRestaurants.length}}家收藏的餐廳</p>
-        <p>已追蹤{{user.Followings.length}}位美食家</p>
-        <p>{{user.Followers.length}}位粉絲追蹤您</p>
+        <p><strong>{{user.Comments.length}}</strong> 已評論餐廳</p>
+        <p><strong>{{user.FavoritedRestaurants.length}}</strong> 收藏的餐廳</p>
+        <p><strong>{{user.Followings.length}}</strong> followings</p>
+        <p><strong>{{user.Followers.length}}</strong> followers</p>
         <button type="button" class="btn btn-link">
           <a href="/users/{{user.id}}/edit">
             編輯個人資料
@@ -25,7 +25,7 @@
 <div class="row" style="background-color: rgba(192, 188, 188, 0.904)">
   <div class="col-12 mb-2 "
     style="border-bottom: 1px solid rgb(157, 216, 231); background-color: rgba(111, 207, 245, 0.5); height:50px;display:flex; align-items:center; justify-content: center">
-    <strong>已評論餐廳</strong>
+    <strong>{{user.Comments.length}}</strong>已評論餐廳
   </div>
   <div class="col-12" style=" display: flex ;flex-wrap: wrap; justify-content: center">
     {{#each user.Comments}}
@@ -42,7 +42,7 @@
 <div class="row" style="background-color: rgba(192, 188, 188, 0.904)">
   <div class="col-12 mb-2 "
     style="border-bottom: 1px solid rgb(130, 105, 218); background-color: rgba(109, 130, 138, 0.5); height:50px;display:flex; align-items:center; justify-content: center">
-    <strong>您收藏的{{user.FavoritedRestaurants.length}}家餐廳</strong>
+    <strong>{{user.FavoritedRestaurants.length}}</strong>收藏的餐廳
   </div>
   <div class="col-12" style=" display: flex ;flex-wrap: wrap; justify-content: center">
     {{#each user.FavoritedRestaurants}}
@@ -59,7 +59,7 @@
 <div class="row" style="background-color: rgba(95, 243, 144, 0.904)">
   <div class="col-12 mb-2 "
     style="border-bottom: 1px solid rgb(126, 241, 160); background-color: rgba(189, 247, 192, 0.5); height:50px;display:flex; align-items:center; justify-content: center">
-    <strong>您追蹤的{{user.Followings.length}}位美食家</strong>
+    <strong>{{user.Followings.length}}</strong>followings
   </div>
   <div class="col-12" style=" display: flex ;flex-wrap: wrap; justify-content: center">
     {{#each user.Followings}}
@@ -75,7 +75,7 @@
 <div class="row" style="background-color: rgba(192, 188, 188, 0.904)">
   <div class="col-12 mb-2 "
     style="border-bottom: 1px solid rgb(199, 230, 65); background-color: rgba(244, 248, 206, 0.5); height:50px;display:flex; align-items:center; justify-content: center">
-    <strong>正在追蹤您的{{user.Followers.length}}位粉絲</strong>
+    <strong>{{user.Followers.length}}</strong>followers
   </div>
   <div class="col-12" style=" display: flex ;flex-wrap: wrap; justify-content: center">
     {{#each user.Followers}}
