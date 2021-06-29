@@ -1,4 +1,5 @@
 const db = require('../models')
+const helpers = require('../_helpers')
 const Restaurant = db.Restaurant
 const Category = db.Category
 const pageLimit = 10
@@ -47,9 +48,9 @@ const restController = {
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
         categoryName: r.dataValues.Category.name,
-        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
+        isFavorited: helpers.getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id),
         //req.user.FavoritedRestaurants 取出使用者的收藏清單，然後 map 成 id 清單，之後用 Array 的 includes 方法進行比對，最後會回傳布林值。
-        isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
+        isLiked: helpers.getUser(req).LikedRestaurants.map(d => d.id).includes(r.id)
         //在user passport的時候已經取出關聯的資料
       }))
 
@@ -80,8 +81,8 @@ const restController = {
         { model: Comment, include: [User] }//是不是也可以把資料變成多對多？但是因為有三個元素 restaurant、user、comment??
       ]
     }).then(restaurant => {
-      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
-      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(helpers.getUser(req).id)
+      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(helpers.getUser(req).id)
       //把有收藏此餐廳的user經過map變成id清單後，比對是否符合使用者的id，如果有，表示是已經收藏的餐廳
       res.render('restaurant', {
         restaurant: restaurant.toJSON(),

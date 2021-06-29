@@ -9,6 +9,7 @@ const Like = db.Like
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const fs = require('fs')
+const helpers = require('../_helpers')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -57,7 +58,7 @@ const userController = {
   //加我的最愛
   addFavorite: (req, res) => {
     return Favorite.create({
-      UserId: req.user.id,
+      UserId: helpers.getUser(req).id,
       RestaurantId: req.params.restaurantId
     })
       .then((restaurant) => {
@@ -68,7 +69,7 @@ const userController = {
   removeFavorite: (req, res) => {
     return Favorite.findOne({
       where: {
-        UserId: req.user.id,
+        UserId: helpers.getUser(req).id,
         RestaurantId: req.params.restaurantId
       }
     })
@@ -82,7 +83,7 @@ const userController = {
   //按讚
   addLike: (req, res) => {
     return Like.create({
-      UserId: req.user.id,
+      UserId: helpers.getUser(req).id,
       RestaurantId: req.params.restaurantId
     })
       .then((restaurant) => {
@@ -93,7 +94,7 @@ const userController = {
   removeLike: (req, res) => {
     return Like.findOne({
       where: {
-        UserId: req.user.id,
+        UserId: helpers.getUser(req).id,
         RestaurantId: req.params.restaurantId
       }
     })
@@ -117,7 +118,7 @@ const userController = {
         // 計算追蹤者人數
         FollowerCount: user.Followers.length,
         // 判斷目前登入使用者是否已追蹤該 User 物件
-        isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
+        isFollowed: helpers.getUser(req).Followings.map(d => d.id).includes(user.id)
       }))
       // 依追蹤者人數排序清單
       users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
@@ -126,7 +127,7 @@ const userController = {
   },
   addFollowing: (req, res) => {
     return Followship.create({
-      followerId: req.user.id,
+      followerId: helpers.getUser(req).id,
       followingId: req.params.userId
     })
       .then((followship) => {
@@ -137,7 +138,7 @@ const userController = {
   removeFollowing: (req, res) => {
     return Followship.findOne({
       where: {
-        followerId: req.user.id,
+        followerId: helpers.getUser(req).id,
         followingId: req.params.userId
       }
     })
