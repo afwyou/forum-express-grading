@@ -152,11 +152,19 @@ const userController = {
   //使用者資料
   getUser: (req, res) => {
     return User.findByPk(req.params.id, {
-      include: [{ model: Comment, include: [Restaurant] }]
+      include: [
+        { model: Comment, include: [Restaurant] },
+        { model: Restaurant, as: 'FavoritedRestaurants' },
+        { model: User, as: 'Followers' },
+        { model: User, as: 'Followings' },]
     })
       .then(user => {
         return res.render('profile', {
-          user: user.toJSON()
+          user: user.toJSON(),
+          comments: user.Comments,
+          FavoritedRestaurants: user.FavoritedRestaurants,
+          Followers: user.Followers,
+          Followings: user.Followings
         })
       })
   },
