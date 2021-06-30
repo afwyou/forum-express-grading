@@ -13,7 +13,7 @@
       </ul>
     </div>
   </div>
-  <div class="col-md-8">
+  <div class="col-md-12">
     <p>{{restaurant.description}}</p>
     <a class="btn btn-primary" href="/restaurants/{{restaurant.id}}/dashboard">Dashboard</a>
     {{#if isFavorited }}
@@ -22,6 +22,14 @@
     {{else}}
     <form action="/favorite/{{restaurant.id}}" method="POST" style="display: contents;"><button type="submit"
         class="btn btn-primary">加到最愛</button></form>
+    {{/if}}
+    {{#if isLiked }}
+    <form action="/like/{{restaurant.id}}?_method=DELETE" method="POST" style="display: inline-block;"><button
+        type="submit" class="btn btn btn-outline-danger">Unlike</button></form>
+    {{else}}
+    <form action="/like/{{restaurant.id}}" method="POST" style="display: inline-block;"><button type="submit"
+        class="btn btn-outline-success">Like</button>
+    </form>
     {{/if}}
   </div>
   <hr>
@@ -55,4 +63,4 @@
 <hr />
 {{/each}}
 
-<a href="javascript:history.back()">回上一頁</a>
+<a href="/">回上一頁</a>

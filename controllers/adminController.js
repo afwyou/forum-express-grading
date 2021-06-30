@@ -1,6 +1,7 @@
 const db = require('../models')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+//這個環境變數要記得也要存入heroku
 const Restaurant = db.Restaurant
 const Category = db.Category
 const User = db.User
@@ -65,7 +66,9 @@ const adminController = {
     const { file } = req
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
+      //在使用者上傳檔案之後會呼叫 imgur 的 API
       imgur.upload(file.path, (err, img) => {
+        //把圖片直接從暫存資料夾上傳上去，成功後 http://img.data.link/ 會是剛剛上傳後拿到的圖片網
         return Restaurant.findByPk(req.params.id)
           .then((restaurant) => {
             restaurant.update({

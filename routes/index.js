@@ -26,8 +26,10 @@ module.exports = (app, passport) => {
   //前台
   app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
   app.get('/restaurants', authenticated, restController.getRestaurants)
+  app.get('/restaurants/top', authenticated, restController.getTopRestaurant)
   app.get('/restaurants/feeds', authenticated, restController.getFeeds)
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+  app.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 
   //評論
   app.post('/comments', authenticated, commentController.postComment)
@@ -37,12 +39,19 @@ module.exports = (app, passport) => {
   app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
   app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 
+  //like
+  app.post('/like/:restaurantId', authenticated, userController.addLike)
+  app.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
   //追蹤
   app.post('/following/:userId', authenticated, userController.addFollowing)
   app.delete('/following/:userId', authenticated, userController.removeFollowing)
 
   //users
   app.get('/users/top', authenticated, userController.getTopUser)
+  app.get('/users/:id', authenticated, userController.getUser)
+  app.get('/users/:id/edit', authenticated, userController.editUser)
+  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
   app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
   app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 

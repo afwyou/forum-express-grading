@@ -1,4 +1,5 @@
 const db = require('../models')
+const helpers = require('../_helpers')
 const Restaurant = db.Restaurant
 const Category = db.Category
 const pageLimit = 10
@@ -47,15 +48,16 @@ const restController = {
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
         categoryName: r.dataValues.Category.name,
-        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+        isFavorited: helpers.getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id),
         //req.user.FavoritedRestaurants 取出使用者的收藏清單，然後 map 成 id 清單，之後用 Array 的 includes 方法進行比對，最後會回傳布林值。
+        isLiked: helpers.getUser(req).LikedRestaurants.map(d => d.id).includes(r.id)
+        //在user passport的時候已經取出關聯的資料
       }))
 
       Category.findAll({
         raw: true,
         nest: true
       }).then(categories => {
-        console.log(`列印出data==========${data}`)
         return res.render('restaurants', {
           restaurants: data,
           categories: categories,
@@ -74,24 +76,20 @@ const restController = {
     return Restaurant.findByPk(req.params.id, {
       include: [
         Category,
-        { model: User, as: 'FavoritedUsers' },//調出有收藏此餐廳的關聯user
-        { model: Comment, include: [User] }
+        { model: User, as: 'FavoritedUsers' },
+        { model: User, as: 'LikedUsers' },//調出有like此餐廳的關聯user
+        { model: Comment, include: [User] }//是不是也可以把資料變成多對多？但是因為有三個元素 restaurant、user、comment??
       ]
     }).then(restaurant => {
-      // console.log('=====restaurant.Comments[0].dataValues=====')
-      // console.log(restaurant.Comments[0].dataValues)
-      // console.log('=====restaurant.Comments[0]=====')
-      // console.log(restaurant.Comments[0])
-      // console.log('=====restaurant.Comments=====')
-      // console.log(restaurant.Comments)
-      // console.log('=====restaurant=====')
-      // console.log(restaurant)
-      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(helpers.getUser(req).id)
+      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(helpers.getUser(req).id)
       //把有收藏此餐廳的user經過map變成id清單後，比對是否符合使用者的id，如果有，表示是已經收藏的餐廳
-      return res.render('restaurant', {
+      res.render('restaurant', {
         restaurant: restaurant.toJSON(),
-        isFavorited: isFavorited
+        isFavorited: isFavorited,
+        isLiked: isLiked,
       })
+      return restaurant.increment('viewCounts', { by: 1 })
     })
   },
   getFeeds: (req, res) => {
@@ -112,11 +110,38 @@ const restController = {
         //{ model: Comment, include: [User] }
       })
     ]).then(([restaurants, comments]) => {
-      console.log(comments)
+      // console.log(comments)
       return res.render('feeds', {
         restaurants: restaurants,
         comments: comments
       })
+    })
+  },
+  getDashboard: (req, res) => {
+    return Restaurant.findByPk(req.params.id, {
+      include: [
+        Category,
+        { model: User, as: 'FavoritedUsers' },//調出有收藏此餐廳的關聯user
+        { model: Comment, include: [User] }
+      ]
+    }).then(restaurant => {
+      return res.render('dashboard', { restaurant: restaurant.toJSON() })
+    })
+  },
+  getTopRestaurant: (req, res) => {
+    return Restaurant.findAll({
+      include: [
+        { model: User, as: 'FavoritedUsers' }
+      ]
+    }).then(restaurants => {
+      restaurants = restaurants.map(r => ({
+        ...r.dataValues,
+        description: r.dataValues.description.substring(0, 50),
+        FavoritedCount: r.FavoritedUsers.length,
+        isFavorited: helpers.getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id)
+      }))
+      restaurants = restaurants.sort((a, b) => b.FavoritedCount - a.FavoritedCount).slice(0, 10)
+      return res.render('topRestaurant', { restaurants })
     })
   },
 }
