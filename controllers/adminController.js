@@ -18,13 +18,8 @@ const adminController = {
   },
   //瀏覽餐廳（一間）
   getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, {
-      include: [Category]
-    }).then(restaurant => {
-      console.log(restaurant)
-      return res.render('admin/restaurant', {
-        restaurant: restaurant.toJSON()
-      })
+    adminService.getRestaurant(req, res, (data) => {
+      return res.render('admin/restaurant', data)
     })
   },
   //新增餐廳（進入新增頁面）
