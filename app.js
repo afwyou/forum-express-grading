@@ -37,7 +37,7 @@ app.listen(port, () => {
 })
 
 //要放在最後一行,這樣前面的樣板設定才能夠傳入路由
-require('./routes')(app, passport)
+require('./routes')(app) //passport已經不在routes/index.js使用了
 //加入passport，路由的passport.authenticate才能執行
 
 module.exports = app
