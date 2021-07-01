@@ -5,22 +5,8 @@ const Category = db.Category
 let categoryController = {
   //查詢分類
   getCategories: (req, res) => {
-    return Category.findAll({
-      raw: true,
-      nest: true
-    }).then(categories => {
-      //如果從edit發送請求，就會帶有id
-      if (req.params.id) {
-        Category.findByPk(req.params.id)
-          .then((category) => {
-            return res.render('admin/categories', {
-              categories: categories,//渲染所有category
-              category: category.toJSON()//渲染輸入匡的category
-            })
-          })
-      } else {
-        return res.render('admin/categories', { categories: categories })
-      }
+    categoryService.getCategories(req, res, (data) => {
+      return res.render('admin/categories', data)
     })
   },
   //修改分類
