@@ -15,5 +15,12 @@ let categoryController = {
       return res.json(data)
     })
   },
+
+  postCategory: (req, res) => {
+    //沒有畫面問題，只需要把資訊回傳
+    categoryService.postCategory(req, res, (data) => {
+      return res.json(data)
+    })
+  },
 }
 module.exports = categoryController

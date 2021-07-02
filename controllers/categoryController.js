@@ -23,18 +23,15 @@ let categoryController = {
 
   //新增分類
   postCategory: (req, res) => {
-    if (!req.body.name) {
-      //因為 didn't 單引號會影響JavaScript字串解析，因此加上跳脫字元 (escape character) \
-      req.flash('error_messages', 'name didn\'t exist')
-      return res.redirect('back')
-    } else {
-      return Category.create({
-        name: req.body.name
-      })
-        .then((category) => {
-          res.redirect('/admin/categories')
-        })
-    }
+    categoryService.postCategory(req, res, (data) => {
+      //因為要給前端顯示不同的頁面，因此需要if else
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      }
+      req.flash('success_messages', data['message'])
+      res.redirect('/admin/categories')
+    })
   },
 
   //刪除分類
