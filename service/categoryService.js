@@ -11,13 +11,13 @@ const categoryService = {
       if (req.params.id) {//屬於編輯類別畫面
         Category.findByPk(req.params.id)
           .then((category) => {
-            return callback({
+            return res.render('admin/categories', {
               categories: categories,
-              category: category.toJSON()
+              category: category
             })
           })
       } else {//屬於全部類別畫面
-        return callback({ categories: categories })
+        callback({ categories: categories })
       }
     })
   },
