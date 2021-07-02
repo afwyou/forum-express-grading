@@ -8,7 +8,7 @@ const adminService = {
   getRestaurants: (req, res, callback) => {
     return Restaurant.findAll({
       raw: true,
-      nest: true,
+      nest: true,//少了他畫面就跑不出來
       include: [Category]
     })
       .then(restaurants => {
